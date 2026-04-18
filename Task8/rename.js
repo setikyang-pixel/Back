@@ -1,0 +1,1 @@
+exports.rename = (i)=> "file_" + i;

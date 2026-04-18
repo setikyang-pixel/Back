@@ -1,0 +1,5 @@
+const path = require("node:path")
+const fs = require("node:fs")
+const {app} = require("./app.js")
+const address = path.join(__dirname,"data.txt")
+fs.appendFile(address,app("Current Time/n",),()=>{})

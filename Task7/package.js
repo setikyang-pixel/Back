@@ -1,0 +1,1 @@
+exports.arr = ['logd', 'uploads/images', 'database/backup']
