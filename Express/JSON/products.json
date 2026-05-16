@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1778776594973,
+    "name": "banana",
+    "price": 450,
+    "quantity": 3,
+    "desqription": "fruit"
+  },
+  {
+    "id": 1778777770885,
+    "name": "gradefruit",
+    "price": 750,
+    "quantity": 7,
+    "desqription": "fruit"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1778758247044,
+    "username": "Gago",
+    "email": "gagsetikyan@gmail.com",
+    "password": "pass1234",
+    "role": "admin"
+  },
+  {
+    "id": 1778758313694,
+    "username": "Hakob",
+    "email": "hakobdedyan@gmail.com",
+    "password": "pass1234",
+    "role": "customer"
+  },
+  {
+    "id": 1778760214104,
+    "username": "Mamikon",
+    "email": "mamikondedyan@gmail.com",
+    "password": "pass1234",
+    "role": "customer"
+  }
+]

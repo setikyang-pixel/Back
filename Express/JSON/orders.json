@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1778952427838,
+    "user_id": 1778758247044,
+    "order_date": "2026-05-16T17:27:07.838Z",
+    "total_amount": 1650,
+    "status": "pending",
+    "items": [
+      { "product_id": 1778776594973, "quantity": 2, "price": 450 },
+      { "product_id": 1778777770885, "quantity": 1, "price": 750 }
+    ]
+  }
+]

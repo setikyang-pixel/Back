@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1778929809278,
+    "user_id": 1778758247044,
+    "items": [
+      { "product_id": 1778776594973, "quantity": 2 },
+      { "product_id": 1778777770885, "quantity": 1 }
+    ]
+  },
+  {
+    "id": 1778931203411,
+    "user_id": 1778758313694,
+    "items": [
+      { "product_id": 1778776594973, "quantity": 5 },
+      { "product_id": 1778777770885, "quantity": 2 }
+    ]
+  }
+]
