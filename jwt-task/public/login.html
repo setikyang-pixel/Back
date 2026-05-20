@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | JWT Auth</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <main class="auth-card">
+        <div class="brand-bar">
+          <h1>Login</h1>
+          <p>Enter your credentials to access the dashboard.</p>
+        </div>
+
+        <form id="login-form">
+          <div class="field-group">
+            <label for="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+            />
+          </div>
+          <div class="field-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+          <div id="error-message" class="form-error" aria-live="polite"></div>
+          <button class="btn btn-primary" type="submit">Login</button>
+          <p class="form-note">
+            New here? <a href="register.html">Create an account</a>
+          </p>
+        </form>
+      </main>
+    </div>
+
+    <script>
+      const form = document.getElementById("login-form");
+      const errorMessage = document.getElementById("error-message");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        errorMessage.textContent = "";
+        const email = form.email.value.trim();
+        const password = form.password.value;
+        try {
+          const res = await fetch("http://127.0.0.1:3001/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+          const d = await res.json();
+          localStorage.setItem("token",d.token)
+          if (!res.ok) {
+            throw new Error(d.message || "Login failed.");
+          }
+          if (d.token) {
+            sessionStorage.setItem("token", d.token);
+          } else {
+            throw new Error("No token received from server.");
+          }
+          window.location.href = "dashboard.html";
+        } catch (error) {
+          errorMessage.textContent = error.message;
+        }
+      });
+    </script>
+  </body>
+</html>

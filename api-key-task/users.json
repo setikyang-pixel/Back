@@ -1,0 +1,7 @@
+[
+    {
+        "name" : "Hakob",
+        "apikey": "qwertyuiop",
+        "permission":["read","write"]
+    }
+]

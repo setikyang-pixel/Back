@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | JWT Auth</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-shell dashboard-simple">
+      <h1>Dashboard</h1>
+      <p class="label">Signed in as</p>
+      <h2 class="user"></h2>
+      <p id="user-email" class="dashboard-email">Loading…</p>
+    </div>
+
+    <script>
+      (async function () {
+        let tok = sessionStorage.getItem("token");        
+        try {
+          let res = await fetch("http://localhost:3001/api/me", {
+            method: "GET",
+            headers: {
+              "content-type": "application/json",
+              Authorization: tok,
+            },
+          });
+          let {user:{email}} = await res.json();
+          let us = document.querySelector("h2")
+          us.textContent = email;
+        } catch (err) {
+          console.log("dddd");
+        }
+      })();
+    </script>
+  </body>
+</html>
