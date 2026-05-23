@@ -1,6 +1,5 @@
 import obj from "../config/env.js";
 import { register, login, getMe } from "../services/auth.service.js";
-import cookie from "cookie-parser";
 let CookieName = obj.COOKIE_NAME;
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -11,8 +10,10 @@ const COOKIE_OPTIONS = {
 
 async function registerHandler(req, res, next) {
   try {
+    
     let { username, password } = req.body;
     const user = await register(username, password);
+    console.log(username,password);
     req.user = user;
     res.status(201).json(user);
   } catch (err) {

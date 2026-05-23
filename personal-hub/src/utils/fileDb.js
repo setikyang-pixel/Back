@@ -2,14 +2,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 function reading(fileName) {
-  return JSON.parse(
-    fs.readFileSync(path.resolve(`../../data/${fileName}`), "utf-8"),
-  );
+  let ar = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "data", fileName), "utf-8"))
+  console.log(Array.isArray(ar));
+  return ar
 }
 function writing(fileName, modifie) {
   fs.writeFileSync(
-    path.resolve(`../../data/${fileName}`),
+    path.resolve(path.resolve(process.cwd(), "data", fileName)),
     JSON.stringify(modifie),
   );
 }
-export {reading,writing}
+export { reading, writing };

@@ -3,7 +3,8 @@ const userJSON = "users.json";
 
 const getUsers = () => reading(userJSON);
 const findUserName = (username) => {
-  let users = reading(userJSON).find((i) => i.username === username);
+  
+  let users = reading(userJSON).find((i) => i.username === username);  
   return users ? users : null;
 };
 const findUserById = (id) => {
@@ -13,6 +14,7 @@ const findUserById = (id) => {
 const createUser = (user) => {
   let newUser = reading(userJSON);
   writing(userJSON, [...newUser, user]);
+  console.log("guii");
   delete user.passwordHash;
   return user
 };
