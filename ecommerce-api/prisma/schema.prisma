@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/config/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  customer
+  admin
+
+  @@map("role")
+}
+
+model UsersLogin {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  name       String
+  role       Role     @default(customer)
+  created_at DateTime @default(now()) @db.Timestamptz
+  cart       Cart?
+  orders     Order[]
+  reviews    Review[]
+
+  @@map("user_login")
+}
+
+model Category {
+  id                Int               @id @default(autoincrement())
+  name              String            @unique
+  description       String?
+  productCategories ProductCategory[]
+
+  @@map("category")
+}
+
+model Product {
+  id                Int               @id @default(autoincrement())
+  name              String
+  description       String?
+  price             Decimal           @db.Decimal(10, 2)
+  stock             Int               @default(0)
+  created_at        DateTime          @default(now()) @db.Timestamptz
+  productCategories ProductCategory[]
+  cartItems         CartItems[]
+  orderItems        OrderItem[]
+  reviews           Review[]
+
+  @@map("product")
+}
+
+model ProductCategory {
+  productId  Int
+  categoryId Int
+
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  createdAt DateTime @default(now()) @db.Timestamptz
+
+  user UsersLogin @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  cartItems CartItems[]
+}
+
+model CartItems {
+  id        Int @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  status    String   @default("pending")
+  total     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+
+  user  UsersLogin  @relation(fields: [userId], references: [id])
+  items OrderItem[]
+}
+
+model OrderItem {
+  id              Int     @id @default(autoincrement())
+  orderId         Int
+  productId       Int
+  quantity        Int
+  priceAtPurchase Decimal @db.Decimal(10, 2)
+  order           Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product @relation(fields: [productId], references: [id])
+
+  @@map("order_item")
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  user    UsersLogin @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
