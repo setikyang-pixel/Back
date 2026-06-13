@@ -5,13 +5,13 @@ import "dotenv/config";
 
 const meControler = async (req, res) => {
   try {
-    const { productId, quantity, userId } = req.body;
-    if (!productId || !quantity || !userId) {
-      return res.status(400).json({ error: "Missing required fields" });
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({
+        error: "No token provided",
+      });
     }
-    const cartGet = await prisma.cart.upsert({
-        where : { }
-    })
+    const user = verifyJWT(token);
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: "Bad request for your email!!!" });
@@ -55,11 +55,12 @@ const loginControler = async (req, res) => {
       role: myUser.role,
       created_at: myUser.created_at,
     });
-
+    req.user = myUser.id;
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
+    
     res.json("Great response.");
   } catch (error) {
     res.status(500).json({ error: "Bad request for email!!!" });

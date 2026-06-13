@@ -3,20 +3,54 @@ import express from "express";
 
 const getCart = async (req, res) => {
   try {
-    const id = +req.params.id;
-    const prod = await prisma.product.findUnique({
-      where: { id: id },
+    const userId = req.user.id;
+    if (!userId)
+      return res.status(400).json({ error: "Missing required fields!!!" });
+    const userCart = await prisma.cart.findUnique({
+      where: { userId: userId },
+      include: {
+        cartItems: {
+          include: {
+            product: true,
+          },
+        },
+      },
     });
-    if (!prod) return res.status(404).send("No product!!!");
-    res.status(200).json(prod);
+    if (!userCart) {
+      return res
+        .status(404)
+        .json({ message: "Cart is empty or does not exist" });
+    }
+    res.status(200).json(userCart);
   } catch (err) {
-    res.status(500).json({ error: "Bad request!!!" });
+    res.status(500).json({ error: err.message });
   }
 };
 
 const addToCart = async (req, res) => {
   try {
-  } catch (error) {
+    const userId = req.user.id;
+    const { productId, quantity } = req.body;
+    return res.status(400).json({ error: "Missing required fields" });
+    const result = await prisma.cartItems.findUnique({
+      where: {
+        cartId_productId: {
+          cartId: cart.id,
+          productId: productId,
+        },
+      },
+    });
+
+    const cartGet = await prisma.cart.upsert({
+      where: { userId: +userId },
+      update: {},
+      create: { userId: +userId },
+    });
+    // cosnt cartItem = prisma.cartItems.upsert({
+
+    // })
+    res.status(200).json(prod);
+  } catch (err) {
     res.status(500).json({ error: "Bad request!!!" });
   }
 };

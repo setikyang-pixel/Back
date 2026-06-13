@@ -1,4 +1,5 @@
 import express from "express";
+import { verifyJWT } from "../utils/jwt.js";
 
 const loginMiddle = async function (req, res, next) {
   const { email, password } = req.body;
@@ -19,13 +20,16 @@ const registerMiddle = async function (req, res, next) {
   next();
 };
 const meMiddle = async function (req, res, next) {
-  const { email} = req.body;
-  if (!email) {
-    return res.status(400).json({
-      message: "Email and password are required",
-    });
+  const token = req.cookies.token;
+  if (!token)
+    return res.status(401).json({ error: "Unauthorized. Please log in." });
+  try {
+    const decoded = verifyJWT(token);    
+    req.user = decoded.id;
+    next();
+  } catch (err) {
+    return res.status(403).json({ error: "Invalid token." });
   }
-  next();
 };
 
-export { loginMiddle,registerMiddle, meMiddle};
+export { loginMiddle, registerMiddle, meMiddle };
