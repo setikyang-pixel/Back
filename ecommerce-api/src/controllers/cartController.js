@@ -1,5 +1,6 @@
 import prisma from "../config/db.js";
 import express from "express";
+import { verifyJWT } from "../utils/jwt.js";
 
 const getCart = async (req, res) => {
   try {
@@ -29,34 +30,69 @@ const getCart = async (req, res) => {
 
 const addToCart = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = +verifyJWT(req.cookies.token).id;
     const { productId, quantity } = req.body;
-    return res.status(400).json({ error: "Missing required fields" });
-    const result = await prisma.cartItems.findUnique({
-      where: {
-        cartId_productId: {
-          cartId: cart.id,
-          productId: productId,
-        },
-      },
-    });
-
+    if (!productId || !quantity) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
     const cartGet = await prisma.cart.upsert({
       where: { userId: +userId },
       update: {},
       create: { userId: +userId },
     });
-    // cosnt cartItem = prisma.cartItems.upsert({
-
-    // })
-    res.status(200).json(prod);
+    const result = await prisma.cartItems.upsert({
+      where: {
+        cartId_productId: {
+          cartId: cartGet.id,
+          productId: +productId,
+        },
+      },
+      update: {
+        quantity: { increment: +quantity },
+      },
+      create: {
+        cartId: cartGet.id,
+        productId: +productId,
+        quantity: +quantity,
+      },
+    });
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ error: "Bad request!!!" });
   }
 };
 
 const updateCartItem = async (req, res) => {
-  res.json({ message: "updateCartItem", id: req.params.id, item: req.body });
+  try {
+    const id = +req.params.id;
+    const userId = req.body.userId || req.user.id;
+    const quantity = +req.body.quantity;
+    const item = await prisma.cartItems.findUnique({
+      where: { id: id },
+      include: {
+        cart: true,
+      },
+    });
+    if (!item) {
+      return res.status(404).json({
+        error: "Cart item not found",
+      });
+    }
+    if (item.cart.userId !== userId) {
+      return res.status(403).json({
+        error: "Forbidden",
+      });
+    }
+    const cartUpd = await prisma.cart.update({
+      where: { id },
+      data: { quantity: quantity },
+    });
+    res.status(201).json(cartUpd);
+  } catch (error) {
+    res.status(500).json({
+      error: err.message,
+    });
+  }
 };
 
 const removeFromCart = async (req, res) => {

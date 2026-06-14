@@ -1,5 +1,4 @@
 import express from "express";
-import prisma from "../config/db.js";
 import { loginMiddle, registerMiddle,meMiddle } from "../middleware/auth.middleware.js";
 import {
   loginControler,

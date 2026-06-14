@@ -1,5 +1,4 @@
 import express from "express";
-import prisma from "../config/db.js";
 import { 
   getAllProducts, 
   getProductById, 
