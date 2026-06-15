@@ -3,11 +3,11 @@ import { verifyJWT } from "../utils/jwt.js";
 
 const getAllReviews = async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = +req.params.id;
     const review = await prisma.review.findMany({
-      where: { id },
+      where: { productId: id },
     });
-    res.send(200).json(review);
+    res.status(200).json(review);
   } catch (error) {
     res.status(500).json({ error: "Bad request!!!" });
   }
@@ -24,7 +24,7 @@ const createReview = async (req, res) => {
       where: {
         userId,
         status: "delivered",
-        items: {
+        orderItems: {
           some: {
             productId,
           },
@@ -87,6 +87,7 @@ const deleteReview = async (req, res) => {
         id: reviewId,
       },
     });
+    res.sendStatus(204);
   } catch (error) {
     res.status(500).json({ error: "Bad request!!!" });
   }

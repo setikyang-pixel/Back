@@ -83,8 +83,8 @@ const updateCartItem = async (req, res) => {
         error: "Forbidden",
       });
     }
-    const cartUpd = await prisma.cart.update({
-      where: { id },
+    const cartUpd = await prisma.cartItems.update({
+      where: { id: id },
       data: { quantity: quantity },
     });
     res.status(201).json(cartUpd);

@@ -3,7 +3,7 @@ import prisma from "../config/db.js";
 const getAllCategories = async (req, res) => {
   try {
     const categories = await prisma.category.findMany();
-    if (!categories.length) return res.status(401).send("No categories!!!");
+    if (!categories.length) return res.status(404).send("No categories!!!");
     res.status(200).json(categories);
   } catch (err) {
     res.status(500).json({ error: "Bad request!!!" });

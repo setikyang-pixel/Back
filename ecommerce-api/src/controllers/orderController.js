@@ -34,7 +34,7 @@ const getOrderById = async (req, res) => {
     if (!order) {
       return res.status(404).json({ error: "Order not found!!!" });
     }
-    if (order.userId !== userId && str !== "admin") {
+    if (order.userId !== userId.id && str !== "admin") {
       return res.status(403).json({ error: "Forbidden!!!" });
     }
     res.status(200).json(order);
@@ -98,7 +98,7 @@ const updateOrder = async (req, res) => {
     const order = await prisma.order.findUnique({
       where: { id: orderId },
     });
-    const str = order.role.toLowerCase();
+    const str = verifyJWT(req.cookies.token).role.toLowerCase();
     let UpdOrder;
     if (str == "admin") {
       UpdOrder = await prisma.order.update({
