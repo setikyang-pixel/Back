@@ -197,7 +197,7 @@ SELECT genre, COUNT(*) AS song_count
 FROM music
 GROUP BY genre
 HAVING COUNT(*) > 3;
- 
+
 SELECT
     (release_year / 10) * 10 AS decade,
     COUNT(*) AS albom_count
